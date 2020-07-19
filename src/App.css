@@ -1,9 +1,14 @@
 body {
-  padding: 2rem;
+  padding-left: 5rem;
+  padding-right: 5rem;
 }
 
 ul {
   column-count: 6;
   column-width: 250px;
+  padding-inline-start: 0px;
 }
 
+section:last-of-type .horizontalRule{
+  display: none;
+}

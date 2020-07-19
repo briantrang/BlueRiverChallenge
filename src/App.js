@@ -6,6 +6,7 @@ import BuildingZone from "./components/BuildingZone";
 function App() {
   //Create hook to store API Data
   const [allItems, setAllItems] = useState([]);
+  const [buildingZones, setBuildingZones] = useState([]);
 
   //Grab API Data
   useEffect(() => {
@@ -21,201 +22,46 @@ function App() {
         //log any errors
         console.log(error);
       });
-  }, [allItems]);
+  }, []);
+
+  //Sort the data in alphabetical order by their building zone except for Other Bay Area, display that last
+  allItems.sort((a, b) => {
+    if (a.buildingzone === "Other Bay Area") return 1;
+    else if (b.buildingzone === "Other Bay Area") return -1;
+    else if (a.buildingzone > b.buildingzone) return 1;
+    else if (a.buildingzone < b.buildingzone) return -1;
+    else return 0;
+  });
+
+  //Make copy of allItems and store in buildingZone
+  let buildingZone = [];
+
+  allItems.map((item, i) => {
+    return (buildingZone[i] = item.buildingzone);
+  });
+
+  //Remove all duplicate building zones
+  let uniqueBuildingZone = new Set(buildingZone);
+
+  //Store all unique building zones into new array
+  let uniqueBuildingArray = [];
+  uniqueBuildingZone.forEach((item) => {
+    uniqueBuildingArray.push(item);
+  });
+
+  //Remove all array elements that are empty
+  uniqueBuildingArray.splice(uniqueBuildingArray.indexOf(""), 1);
 
   return (
     <div>
       <h1>Index</h1>
       <hr />
 
-      {/* 
-      ###################
-      Apple Park Section  
-      ###################     
-      */}
+      {/* Display all buildings and their respective building names in alphabetical order */}
 
-      <h2>Apple Park</h2>
-      <ul>
-        {allItems.map((item, i) => {
-          if (item.buildingzone === "Apple Park") {
-            return (
-              <BuildingZone
-                buildingNames={item.buildingname}
-                link={
-                  item.black === 0
-                    ? "https://applefacilities.review.blueriver.com"
-                    : null
-                }
-              />
-            );
-          } else {
-            return null;
-          }
-        })}
-      </ul>
-      <hr />
-
-      {/* 
-      ###################
-       Bubbs / Results Way Section   
-      ###################     
-      */}
-
-      <h2>Bubb / Results Way</h2>
-      <ul>
-        {allItems.map((item, i) => {
-          if (item.buildingzone === "Bubb / Results Way") {
-            return (
-              <BuildingZone
-                zoneName="Bubb / Results Way"
-                buildingNames={item.buildingname}
-                link={
-                  item.black === 0
-                    ? "https://applefacilities.review.blueriver.com"
-                    : null
-                }
-              />
-            );
-          } else {
-            return null;
-          }
-        })}
-      </ul>
-      <hr />
-
-      {/* 
-      ###################
-      Infinite Loop Section  
-      ###################     
-      */}
-
-      <h2>Infinite Loop</h2>
-      <ul>
-        {allItems.map((item, i) => {
-          if (item.buildingzone === "Infinite Loop") {
-            return (
-              <BuildingZone
-                zoneName="Bubb / Results Way"
-                buildingNames={item.buildingname}
-                link={
-                  item.black === 0
-                    ? "https://applefacilities.review.blueriver.com"
-                    : null
-                }
-              />
-            );
-          } else {
-            return null;
-          }
-        })}
-      </ul>
-      <hr />
-
-      {/* 
-      ###################
-       Santa Clara/San Jose Section  
-      ###################     
-      */}
-      <h2>Santa Clara/San Jose</h2>
-      <ul>
-        {allItems.map((item, i) => {
-          if (item.buildingzone === "Santa Clara/San Jose") {
-            return (
-              <BuildingZone
-                buildingNames={item.buildingname}
-                link={
-                  item.black === 0
-                    ? "https://applefacilities.review.blueriver.com"
-                    : null
-                }
-              />
-            );
-          } else {
-            return null;
-          }
-        })}
-      </ul>
-      <hr />
-
-      {/* 
-      ###################
-       Sunnyvale East Section   
-      ###################     
-      */}
-
-      <h2>Sunnyvale East</h2>
-      <ul>
-        {allItems.map((item, i) => {
-          if (item.buildingzone === "Sunnyvale East") {
-            return (
-              <BuildingZone
-                buildingNames={item.buildingname}
-                link={
-                  item.black === 0
-                    ? "https://applefacilities.review.blueriver.com"
-                    : null
-                }
-              />
-            );
-          } else {
-            return null;
-          }
-        })}
-      </ul>
-      <hr />
-
-      {/* 
-      ###################
-       Sunnyvale West Section  
-      ###################     
-      */}
-      <h2>Sunnyvale West</h2>
-      <ul>
-        {allItems.map((item, i) => {
-          if (item.buildingzone === "Sunnyvale West") {
-            return (
-              <BuildingZone
-                buildingNames={item.buildingname}
-                link={
-                  item.black === 0
-                    ? "https://applefacilities.review.blueriver.com"
-                    : null
-                }
-              />
-            );
-          } else {
-            return null;
-          }
-        })}
-      </ul>
-      <hr />
-
-      {/* 
-      ###################
-       Other Bay Area Section 
-      ###################     
-      */}
-
-      <h2>Other Bay Area</h2>
-      <ul>
-        {allItems.map((item, i) => {
-          if (item.buildingzone === "Other Bay Area") {
-            return (
-              <BuildingZone
-                buildingNames={item.buildingname}
-                link={
-                  item.black === 0
-                    ? "https://applefacilities.review.blueriver.com"
-                    : null
-                }
-              />
-            );
-          } else {
-            return null;
-          }
-        })}
-      </ul>
-      <hr />
+      {uniqueBuildingArray.map((item, i) => {
+        return <BuildingZone zoneName={item} allBuildings={allItems} />;
+      })}
     </div>
   );
 }
